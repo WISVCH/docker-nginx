@@ -1,0 +1,29 @@
+language: minimal
+services:
+  - docker
+script:
+  - docker build --no-cache --pull -t wisvch/nginx -t quay.io/wisvch/nginx .
+deploy:
+  - provider: script
+    script: >-
+      sh -c '
+      docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+      echo pushing to wisvch/nginx;
+      docker push wisvch/nginx;
+      '
+    on:
+      branch: master
+  - provider: script
+    script: >-
+      sh -c '
+      docker login -u "$QUAY_USERNAME" -p "$QUAY_PASSWORD" quay.io;
+      echo pushing to quay.io/wisvch/nginx;
+      docker push quay.io/wisvch/nginx;
+      '
+    on:
+      branch: master
+notifications:
+  email: false
+  slack:
+    rooms:
+      secure: DJ67VVVBa/aRfvY6SlkPgLytxNhQAxqoT165/f9LoGhcNknddSTW8erBulMMa6oVWXXUII1+vxBhhMOR9saz0v7Ke0qLJHRJD+B0bKJJm66Qb+hVI60/JWoQb/nCv9oNWA+w9HciDqnrYlc7iRCoqVvfiwycR9XdBxvDYnprlDWnSD8Lmm+BkxN0lrxzU/mt+QuILDf9icB49ENllsDspJVGQT66MyXa8MkX1uuJl2HID1uT0SDU+bqxzoR0PzkMlIIQQpexlR4F8EBWLCbceV1p1Z0/eq5pnQmu2ctIoyfIuXwCjH63DTPRVlh5lLeqQHXw8OngXhkj73z4m2GS1YxUQs8gfdatw9YTam+jtW5wQSX0DRq1X/o4CanbvX5cqmzWs0fgDJOb4Jx26tVxUUkPqUhT9gma6jNEA+wXyU7Z5JmtEhVQd75J1Oen4O2lA6ZJD3OxOEviUHGXZKywSvzG2X5V4DMAKHiRkebNejbLwJEn//RiyPOmAXR6qgDBsGfy2VbXJLm6rnJrP4TknodNuXtZ31iV4t06QRwn/hdsbEMB3+pm9wuUFxejH1ES7L1tV7/TTM06yIMMSNX/yE5Jr6rX6oB8GfgM90tavWzR1eaZB5geBqSM7SKxGHRPoAv2/STT5EeuWmK+QJ7kSbVIUDp9QMM/0OFEikusKHM=
