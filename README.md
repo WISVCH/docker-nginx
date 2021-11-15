@@ -10,19 +10,19 @@
 
 ### Dockerfile for static files
 ```Dockerfile
-FROM wisvch/nginx
+FROM ghcr.io/wisvch/nginx
 COPY . /srv/
 ```
 
 ### Dockerfile with multi-stage Node.js build
 ```Dockerfile
-FROM node:carbon AS builder
+FROM node:gallium AS builder
 WORKDIR /src
 COPY . .
 RUN yarn
 RUN yarn build
 
-FROM wisvch/nginx
+FROM ghcr.io/wisvch/nginx
 COPY --from=builder /src/build/ /srv/
 ```
 
